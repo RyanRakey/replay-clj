@@ -12,15 +12,15 @@ The library is essentially a thin, idiomatic-Clojure wrapper around [libGDX](htt
 - **Clojure version**: 1.12.0 (was 1.7.0)
 - **Java target**: 1.8 (was 1.6)
 - **Desktop backend**: LWJGL3 (was LWJGL2)
-- **Build tool**: Leiningen (`project.clj`) + Clojure CLI (`deps.edn`)
-- **Test suite**: 25 tests, all passing via headless libGDX backend
+- **Build tool**: Clojure CLI (`deps.edn`)
+- **Test suite**: 287 tests, all passing via headless libGDX backend
 
 ## Project Structure
 
 ```
 play-clj/
-├── project.clj          # Leiningen build config
-├── deps.edn             # Clojure CLI build config (includes :test alias)
+├── deps.edn             # Clojure CLI build config
+├── build.clj            # Java compilation and JAR packaging (tools.build)
 ├── src/
 │   └── play_clj/
 │       ├── core.clj                     # Main screen/game macros, interop helpers
@@ -42,20 +42,23 @@ play-clj/
 ├── src-java/
 │   └── play_clj/g3d_physics/
 │       └── ContactListener3D.java       # Java class used by Bullet contact listener
-├── test/
-│   └── play_clj/
-│       ├── headless_fixture.clj         # HeadlessApplication test fixture
-│       ├── utils_test.clj               # Tests for key conversion, GDX symbols, data structures
-│       ├── math_test.clj                # Tests for vectors, matrices, geometry, math utils
-│       ├── core_test.clj                # Tests for colors, cameras, shapes, key/button codes
-│       ├── g2d_test.clj                 # Tests for texture/sprite/animation entities
-│       └── entities_test.clj            # Tests for entity records and draw! protocol
-├── template/                            # Leiningen template for `lein new play-clj`
-│   ├── project.clj
-│   ├── resources/                       # Android native libs (.so files)
-│   └── src/leiningen/new/play_clj/     # Template source files
 ├── classes/                             # Compiled Java output (ContactListener3D.class)
-└── doclet/                              # Javadoc/doc generation helpers
+└── test/
+    └── play_clj/
+        ├── headless_fixture.clj         # HeadlessApplication test fixture
+        ├── core_test.clj                # Tests for colors, cameras, shapes, key/button codes
+        ├── core_listeners_test.clj      # Tests for input/listener machinery
+        ├── core_utils_test.clj          # Tests for timers, assets, preferences
+        ├── entities_test.clj            # Tests for entity records and draw! protocol
+        ├── g2d_test.clj                 # Tests for texture/sprite/animation entities
+        ├── g3d_test.clj                 # Tests for 3D graphics (model, environment, material)
+        ├── g3d_physics_test.clj         # Tests for Bullet physics wrappers
+        ├── math_test.clj                # Tests for vectors, matrices, geometry, math utils
+        ├── physics_test.clj             # Tests for physics multimethod dispatch
+        ├── physics_shapes_test.clj      # Tests for Box2D shape macros
+        ├── repl_test.clj                # Tests for REPL helper functions
+        ├── ui_test.clj                  # Tests for Scene2D UI widgets
+        └── utils_test.clj               # Tests for key conversion, GDX symbols, data structures
 ```
 
 ## Build & Test
@@ -63,25 +66,20 @@ play-clj/
 ### Clojure CLI (deps.edn)
 
 ```bash
-# Compile and download dependencies
+# Download dependencies
 clojure -P
+
+# Compile Java sources (only needed after modifying .java files)
+clojure -T:build javac
 
 # Run all tests
 clojure -M:test run-tests.clj
 
 # Start a REPL
 clojure -M
-```
 
-### Leiningen
-
-```bash
-# Compile Java sources and build
-lein javac
-lein compile
-
-# Start a REPL
-lein repl
+# Build a JAR
+clojure -T:build jar
 ```
 
 **Note**: The `gdx-platform$natives-desktop` dependency is only needed in the `:test` alias so that the headless backend can load native libraries during testing.
@@ -131,21 +129,10 @@ lein repl
 4. Avoid creating `Texture` from scratch in headless mode; use `(TextureRegion.)` or pass existing objects
 5. Run with `clojure -M:test run-tests.clj`
 
-## Template Notes
-
-The `lein new play-clj` template is still Leiningen-based. If you edit template files, remember:
-- `template/src/leiningen/new/play_clj/desktop-project.clj` — desktop project deps
-- `template/src/leiningen/new/play_clj/android-project.clj` — android project deps
-- `template/src/leiningen/new/play_clj/desktop-launcher.clj` — LWJGL3 launcher code
-- `template/src/leiningen/new/play_clj/core.clj` — default game code template
-- `template/src/leiningen/new/play_clj.clj` — template generator (renders files for new projects)
-
 ## Known Issues / TODOs
 
 - `screenshot!` still uses deprecated `ScreenUtils/getFrameBufferPixels`. Should migrate to `Pixmap/createFromFrameBuffer`
-- The `template` still generates Leiningen projects. A `deps.edn` template for Clojure CLI could be added
 - `SelectBox`, `Tree`, `Slider` became generic in newer libGDX versions but Clojure reflection handles them without explicit type hints in most cases. If runtime `ClassCastException` appears in UI code, add explicit `^SelectBox<String>` style type hints
-- Android template still references `org.clojure-android/clojure` and `neko`. These are old; modern Android builds would need a full rewrite using current Clojure and Android tooling
 - The library does not yet expose newer libGDX features such as `JsonSkimmer`, `PoolManager`, `Vector4`, `Justify` text alignment, etc.
 
 ## License

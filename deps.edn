@@ -2,9 +2,11 @@
         com.badlogicgames.gdx/gdx {:mvn/version "1.14.2"}
         com.badlogicgames.gdx/gdx-box2d {:mvn/version "1.14.2"}
         com.badlogicgames.gdx/gdx-bullet {:mvn/version "1.14.2"}}
- :paths ["src" "src-java" "classes"]
+ :paths ["src" "classes"]
  :mvn/repos {"sonatype" {:url "https://oss.sonatype.org/content/repositories/releases/"}}
  :aliases
  {:test {:extra-paths ["test"]
          :extra-deps {com.badlogicgames.gdx/gdx-backend-headless {:mvn/version "1.14.2"}
-                      com.badlogicgames.gdx/gdx-platform$natives-desktop {:mvn/version "1.14.2"}}}}}
+                      com.badlogicgames.gdx/gdx-platform$natives-desktop {:mvn/version "1.14.2"}}}
+  :build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.9"}}
+          :ns-default build}}}
