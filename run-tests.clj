@@ -1,0 +1,18 @@
+(require '[clojure.test :as t])
+(require 'play-clj.utils-test)
+(require 'play-clj.math-test)
+(require 'play-clj.headless-fixture)
+(require 'play-clj.g2d-test)
+(require 'play-clj.core-test)
+(require 'play-clj.core-utils-test)
+(require 'play-clj.entities-test)
+(require 'play-clj.ui-test)
+(require 'play-clj.g3d-test)
+(require 'play-clj.repl-test)
+(require 'play-clj.physics-shapes-test)
+
+(let [results (t/run-all-tests #"play-clj\..*-test")]
+  (println "\n=== Test Summary ===")
+  (println (format "Ran %d tests in %d namespaces" (:test results) (:ns results)))
+  (println (format "%d failures, %d errors" (:fail results) (:error results)))
+  (System/exit (if (and (zero? (:fail results)) (zero? (:error results))) 0 1)))

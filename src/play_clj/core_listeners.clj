@@ -19,8 +19,8 @@
     (mouseMoved [this sx sy]
       (execute-fn! on-mouse-moved :input-x sx :input-y sy)
       false)
-    (scrolled [this a]
-      (execute-fn! on-scrolled :amount a)
+    (scrolled [this ax ay]
+      (execute-fn! on-scrolled :amount-x ax :amount-y ay)
       false)
     (touchDown [this sx sy p b]
       (execute-fn! on-touch-down :input-x sx :input-y sy :pointer p :button b)

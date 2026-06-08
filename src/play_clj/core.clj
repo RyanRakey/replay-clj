@@ -199,7 +199,8 @@ via the screen map.
       ; the mouse wheel was scrolled
       :on-scrolled
       (fn [screen entities]
-        (println (:amount screen)) ; the amount scrolled
+        (println (:amount-x screen)) ; the x amount scrolled
+        (println (:amount-y screen)) ; the y amount scrolled
         entities)
       ; the screen was touched or a mouse button was pressed
       :on-touch-down

@@ -1,10 +1,12 @@
 (ns {{desktop-namespace}}
   (:require [{{namespace}} :refer :all])
-  (:import [com.badlogic.gdx.backends.lwjgl LwjglApplication]
-           [org.lwjgl.input Keyboard])
+  (:import [com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application
+            Lwjgl3ApplicationConfiguration])
   (:gen-class))
 
 (defn -main
   []
-  (LwjglApplication. {{game-name}} "{{app-name}}" 800 600)
-  (Keyboard/enableRepeatEvents true))
+  (let [config (doto (Lwjgl3ApplicationConfiguration.)
+                 (.setTitle "{{app-name}}")
+                 (.setWindowedMode 800 600))]
+    (Lwjgl3Application. {{game-name}} config)))
