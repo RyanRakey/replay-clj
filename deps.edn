@@ -8,5 +8,8 @@
  {:test {:extra-paths ["test"]
          :extra-deps {com.badlogicgames.gdx/gdx-backend-headless {:mvn/version "1.14.2"}
                       com.badlogicgames.gdx/gdx-platform$natives-desktop {:mvn/version "1.14.2"}}}
+  :coverage {:extra-deps {lambdaisland/cloverage {:mvn/version "1.1.2-no-aot"}}
+             :main-opts ["-m" "lambdaisland.cloverage.coverage"
+                         "-p" "src" "-s" "test"]}
   :build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.9"}}
           :ns-default build}}}

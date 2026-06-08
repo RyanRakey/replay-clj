@@ -75,6 +75,9 @@ clojure -T:build javac
 # Run all tests
 clojure -M:test run-tests.clj
 
+# Generate coverage report (HTML at target/coverage/index.html)
+clojure -M:test:coverage
+
 # Start a REPL
 clojure -M
 
