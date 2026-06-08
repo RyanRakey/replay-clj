@@ -1,6 +1,6 @@
-## Note: I am focusing my efforts on [play-cljc](https://github.com/oakes/play-cljc), a library for games that run on both the desktop and the web.
-
 ## Introduction
+
+This is a fork of the original `play-clj` library. Its goal is to bring the library up to date with the latest version of libGDX.
 
 A Clojure library that provides a wrapper for [libGDX](http://libgdx.badlogicgames.com/), allowing you to write 2D and 3D games that run on desktop OSes (Windows, OS X, and Linux) and Android with the same Clojure codebase.
 
