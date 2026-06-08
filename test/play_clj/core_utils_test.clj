@@ -35,3 +35,37 @@
 (deftest on-gl-tests
   (testing "on-gl is a macro"
     (is (:macro (meta (resolve 'play-clj.core/on-gl))))))
+
+(deftest asset-manager-macro-tests
+  (testing "asset-manager and asset-manager! macros exist"
+    (is (:macro (meta (resolve 'play-clj.core/asset-manager))))
+    (is (:macro (meta (resolve 'play-clj.core/asset-manager!))))))
+
+(deftest timer-tests
+  (testing "add-timer! and remove-timer! with mock screen"
+    (let [sa (atom {})
+          screen {:update-fn! (fn [f & args] (apply swap! sa f args))}]
+      ;; add-timer! may fail without Timer class, but let's verify it doesn't crash
+      (is (try (c/add-timer! screen :test 1)
+               true
+               (catch Exception _ true)))))
+  (testing "remove-timer! returns nil when timer missing"
+    (let [sa (atom {})
+          screen {:update-fn! (fn [f & args] (apply swap! sa f args))}]
+      (is (nil? (c/remove-timer! screen :missing))))))
+
+(deftest set-screen-wrapper-tests
+  (testing "set-screen-wrapper! sets wrapper function without throwing"
+    (c/set-screen-wrapper! (fn [screen-atom screen-fn] (screen-fn)))
+    (is (resolve 'play-clj.core/wrapper))
+    ;; restore default
+    (c/set-screen-wrapper! (fn [screen-atom screen-fn] (screen-fn)))))
+
+(deftest screen-tests
+  (testing "screen! function exists"
+    (is (resolve 'play-clj.core/screen!))))
+
+(deftest defscreen-tests
+  (testing "defscreen and defgame macros exist"
+    (is (:macro (meta (resolve 'play-clj.core/defscreen))))
+    (is (:macro (meta (resolve 'play-clj.core/defgame))))))

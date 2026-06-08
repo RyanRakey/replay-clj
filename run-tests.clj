@@ -10,6 +10,7 @@
 (require 'play-clj.g3d-test)
 (require 'play-clj.repl-test)
 (require 'play-clj.physics-shapes-test)
+(require 'play-clj.physics-test)
 
 (let [results (t/run-all-tests #"play-clj\..*-test")]
   (println "\n=== Test Summary ===")

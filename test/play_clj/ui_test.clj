@@ -138,3 +138,46 @@
     (is (:macro (meta (resolve 'play-clj.ui/text-field))))
     (is (:macro (meta (resolve 'play-clj.ui/tree))))
     (is (:macro (meta (resolve 'play-clj.ui/window))))))
+
+(deftest widget-bang-macro-tests
+  (testing "widget mutation macros exist"
+    (is (:macro (meta (resolve 'play-clj.ui/check-box!))))
+    (is (:macro (meta (resolve 'play-clj.ui/dialog!))))
+    (is (:macro (meta (resolve 'play-clj.ui/image-button!))))
+    (is (:macro (meta (resolve 'play-clj.ui/image-text-button!))))
+    (is (:macro (meta (resolve 'play-clj.ui/scroll-pane!))))
+    (is (:macro (meta (resolve 'play-clj.ui/select-box!))))
+    (is (:macro (meta (resolve 'play-clj.ui/slider!))))
+    (is (:macro (meta (resolve 'play-clj.ui/text-button!))))
+    (is (:macro (meta (resolve 'play-clj.ui/text-field!))))
+    (is (:macro (meta (resolve 'play-clj.ui/tree!))))
+    (is (:macro (meta (resolve 'play-clj.ui/window!))))
+    (is (:macro (meta (resolve 'play-clj.ui/actor!))))
+    (is (:macro (meta (resolve 'play-clj.ui/container!))))
+    (is (:macro (meta (resolve 'play-clj.ui/image!))))
+    (is (:macro (meta (resolve 'play-clj.ui/label!))))
+    (is (:macro (meta (resolve 'play-clj.ui/table!))))
+    (is (:macro (meta (resolve 'play-clj.ui/stack!))))
+    (is (:macro (meta (resolve 'play-clj.ui/horizontal!))))
+    (is (:macro (meta (resolve 'play-clj.ui/vertical!))))))
+
+(deftest skin-macro-tests
+  (testing "skin and skin! macros exist"
+    (is (:macro (meta (resolve 'play-clj.ui/skin))))
+    (is (:macro (meta (resolve 'play-clj.ui/skin!))))))
+
+(deftest style-macro-tests
+  (testing "style macro exists"
+    (is (:macro (meta (resolve 'play-clj.ui/style))))))
+
+(deftest cell-tests
+  (testing "cell! function exists"
+    (is (resolve 'play-clj.ui/cell!))))
+
+(deftest listener-macro-tests
+  (testing "listener macros exist"
+    (is (:macro (meta (resolve 'play-clj.ui/actor-gesture-listener!))))
+    (is (:macro (meta (resolve 'play-clj.ui/change-listener!))))
+    (is (:macro (meta (resolve 'play-clj.ui/click-listener!))))
+    (is (:macro (meta (resolve 'play-clj.ui/drag-listener!))))
+    (is (:macro (meta (resolve 'play-clj.ui/focus-listener!))))))

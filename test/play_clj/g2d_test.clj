@@ -108,3 +108,33 @@
 (deftest sprite-macro-existence-tests
   (testing "sprite macro exists"
     (is (:macro (meta (resolve 'play-clj.g2d/sprite))))))
+
+(deftest nine-patch-bang-macro-tests
+  (testing "nine-patch! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g2d/nine-patch!))))))
+
+(deftest particle-effect-bang-macro-tests
+  (testing "particle-effect! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g2d/particle-effect!))))))
+
+(deftest texture-atlas-bang-macro-tests
+  (testing "texture-atlas! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g2d/texture-atlas!))))))
+
+(deftest bitmap-font-bang-macro-tests
+  (testing "bitmap-font! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g2d/bitmap-font!))))))
+
+(deftest animation-bang-macro-tests
+  (testing "animation! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g2d/animation!))))))
+
+(deftest play-mode-tests
+  (testing "play-mode returns Animation.PlayMode enum"
+    (is (instance? Animation$PlayMode (g2d/play-mode :normal)))
+    (is (instance? Animation$PlayMode (g2d/play-mode :loop)))
+    (is (instance? Animation$PlayMode (g2d/play-mode :loop-pingpong)))))
+
+(deftest animation->texture-tests
+  (testing "animation->texture function exists"
+    (is (resolve 'play-clj.g2d/animation->texture))))

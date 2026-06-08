@@ -153,3 +153,159 @@
 (deftest asset-manager-tests
   (testing "asset-manager macro exists"
     (is (:macro (meta (resolve 'play-clj.core/asset-manager))))))
+
+(deftest gdx-subsystem-macro-tests
+  (testing "GDX subsystem macros exist"
+    (is (:macro (meta (resolve 'play-clj.core/app!))))
+    (is (:macro (meta (resolve 'play-clj.core/audio!))))
+    (is (:macro (meta (resolve 'play-clj.core/files!))))
+    (is (:macro (meta (resolve 'play-clj.core/gl!))))
+    (is (:macro (meta (resolve 'play-clj.core/graphics!))))
+    (is (:macro (meta (resolve 'play-clj.core/input!))))
+    (is (:macro (meta (resolve 'play-clj.core/net!))))))
+
+(deftest sound-music-macro-tests
+  (testing "sound and music macros exist"
+    (is (:macro (meta (resolve 'play-clj.core/sound))))
+    (is (:macro (meta (resolve 'play-clj.core/sound!))))
+    (is (:macro (meta (resolve 'play-clj.core/music))))
+    (is (:macro (meta (resolve 'play-clj.core/music!))))))
+
+(deftest pixmap-macro-tests
+  (testing "pixmap and pixmap! macros exist"
+    (is (:macro (meta (resolve 'play-clj.core/pixmap))))
+    (is (:macro (meta (resolve 'play-clj.core/pixmap!))))))
+
+(deftest shape-macro-tests
+  (testing "shape and shape! macros exist"
+    (is (:macro (meta (resolve 'play-clj.core/shape))))
+    (is (:macro (meta (resolve 'play-clj.core/shape!))))))
+
+(deftest tiled-map-macro-tests
+  (testing "tiled-map macros exist"
+    (is (:macro (meta (resolve 'play-clj.core/tiled-map))))
+    (is (:macro (meta (resolve 'play-clj.core/tiled-map!))))
+    (is (:macro (meta (resolve 'play-clj.core/tiled-map-layer))))
+    (is (:macro (meta (resolve 'play-clj.core/tiled-map-layer!))))
+    (is (:macro (meta (resolve 'play-clj.core/tiled-map-cell))))
+    (is (:macro (meta (resolve 'play-clj.core/tiled-map-cell!))))))
+
+(deftest map-macro-tests
+  (testing "map-related macros exist"
+    (is (:macro (meta (resolve 'play-clj.core/map-layers))))
+    (is (:macro (meta (resolve 'play-clj.core/map-layers!))))
+    (is (:macro (meta (resolve 'play-clj.core/map-layer))))
+    (is (:macro (meta (resolve 'play-clj.core/map-layer!))))
+    (is (:macro (meta (resolve 'play-clj.core/map-objects))))
+    (is (:macro (meta (resolve 'play-clj.core/map-objects!))))
+    (is (:macro (meta (resolve 'play-clj.core/map-object))))
+    (is (:macro (meta (resolve 'play-clj.core/map-object!))))))
+
+(deftest renderer-macro-tests
+  (testing "renderer macros exist"
+    (is (:macro (meta (resolve 'play-clj.core/orthogonal-tiled-map))))
+    (is (:macro (meta (resolve 'play-clj.core/orthogonal-tiled-map!))))
+    (is (:macro (meta (resolve 'play-clj.core/isometric-tiled-map))))
+    (is (:macro (meta (resolve 'play-clj.core/isometric-tiled-map!))))
+    (is (:macro (meta (resolve 'play-clj.core/hexagonal-tiled-map))))
+    (is (:macro (meta (resolve 'play-clj.core/hexagonal-tiled-map!))))
+    (is (:macro (meta (resolve 'play-clj.core/isometric-staggered-tiled-map))))
+    (is (:macro (meta (resolve 'play-clj.core/isometric-staggered-tiled-map!))))))
+
+(deftest camera-position-tests
+  (testing "x and y return camera position"
+    (let [cam (c/orthographic*)
+          screen {:camera cam}]
+      (c/position! screen 10 20)
+      (is (= 10.0 (c/x screen)))
+      (is (= 20.0 (c/y screen)))))
+  (testing "position returns camera position vector"
+    (let [cam (c/orthographic*)
+          screen {:camera cam}]
+      (c/position! screen 5 5)
+      (is (instance? com.badlogic.gdx.math.Vector3 (c/position screen)))))
+  (testing "x! and y! set camera position"
+    (let [cam (c/orthographic*)
+          screen {:camera cam}]
+      (c/x! screen 100)
+      (c/y! screen 200)
+      (is (= 100.0 (c/x screen)))
+      (is (= 200.0 (c/y screen))))))
+
+(deftest perspective-camera-tests
+  (testing "z returns camera z position"
+    (let [cam (c/perspective* 75 800 600)
+          screen {:camera cam}]
+      (c/position! screen 1 2 3)
+      (is (= 3.0 (c/z screen)))))
+  (testing "near and far return clipping distances"
+    (let [cam (c/perspective* 75 800 600)
+          screen {:camera cam}]
+      (is (number? (c/near screen)))
+      (is (number? (c/far screen)))))
+  (testing "near! and far! set clipping distances"
+    (let [cam (c/perspective* 75 800 600)
+          screen {:camera cam}]
+      (c/near! screen 0.1)
+      (c/far! screen 1000)
+      ;; Use approximate comparison because .near returns a float
+      (is (< 0.09 (c/near screen) 0.11))
+      (is (= 1000.0 (c/far screen))))))
+
+(deftest width-height-tests
+  (testing "width and height return camera viewport dimensions"
+    (let [cam (c/orthographic*)
+          screen {:camera cam}]
+      (c/size! screen 640 480)
+      (is (= 640.0 (c/width screen)))
+      (is (= 480.0 (c/height screen))))))
+
+(deftest direction-tests
+  (testing "direction returns camera direction vector"
+    (let [cam (c/perspective* 75 800 600)
+          screen {:camera cam}]
+      (is (instance? com.badlogic.gdx.math.Vector3 (c/direction screen)))))
+  (testing "direction! sets camera direction"
+    (let [cam (c/perspective* 75 800 600)
+          screen {:camera cam}]
+      (c/direction! screen 0 0 -1 false)
+      (is (instance? com.badlogic.gdx.math.Vector3 (c/direction screen))))))
+
+(deftest up-tests
+  (testing "up returns camera up vector"
+    (let [cam (c/perspective* 75 800 600)
+          screen {:camera cam}]
+      (is (instance? com.badlogic.gdx.math.Vector3 (c/up screen)))))
+  (testing "up! sets camera up vector"
+    (let [cam (c/perspective* 75 800 600)
+          screen {:camera cam}]
+      (c/up! screen 0 1 0)
+      (is (instance? com.badlogic.gdx.math.Vector3 (c/up screen))))))
+
+(deftest camera-macro-tests
+  (testing "camera mutation macros exist"
+    (is (:macro (meta (resolve 'play-clj.core/orthographic!))))
+    (is (:macro (meta (resolve 'play-clj.core/perspective!))))))
+
+(deftest game-input-tests
+  (testing "game returns input/touch values"
+    (is (boolean? (c/game :touched?)))
+    (is (boolean? (c/game :fullscreen?)))))
+
+(deftest core-macro-tests
+  (testing "core game/screen macros exist"
+    (is (:macro (meta (resolve 'play-clj.core/defscreen))))
+    (is (:macro (meta (resolve 'play-clj.core/defgame))))
+    (is (resolve 'play-clj.core/set-screen!))
+    (is (resolve 'play-clj.core/set-screen-wrapper!))
+    (is (resolve 'play-clj.core/update!))
+    (is (resolve 'play-clj.core/screen!))))
+
+(deftest update-tests
+  (testing "update! assoc values into screen map"
+    (let [sa (atom {})
+          screen {:update-fn! (fn [f & args] (apply swap! sa f args))}
+          result (c/update! screen :x 1)]
+      ;; update! returns the updated screen after calling update-screen!
+      ;; which may fail without renderer, so just verify it doesn't throw
+      (is (or (map? result) (nil? result))))))

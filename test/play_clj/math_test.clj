@@ -306,3 +306,98 @@
 (deftest interpolation-macro-tests
   (testing "interpolation macro exists"
     (is (:macro (meta (resolve 'play-clj.math/interpolation))))))
+
+(deftest bresenham-2-tests
+  (testing "bresenham-2 creation"
+    (let [b (m/bresenham-2*)]
+      (is (instance? com.badlogic.gdx.math.Bresenham2 b)))))
+
+(deftest bresenham-2-macro-tests
+  (testing "bresenham-2 and bresenham-2! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/bresenham-2))))
+    (is (:macro (meta (resolve 'play-clj.math/bresenham-2!))))))
+
+(deftest convex-hull-macro-tests
+  (testing "convex-hull and convex-hull! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/convex-hull))))
+    (is (:macro (meta (resolve 'play-clj.math/convex-hull!))))))
+
+(deftest delaunay-triangulator-macro-tests
+  (testing "delaunay-triangulator and delaunay-triangulator! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/delaunay-triangulator))))
+    (is (:macro (meta (resolve 'play-clj.math/delaunay-triangulator!))))))
+
+(deftest ear-clipping-triangulator-macro-tests
+  (testing "ear-clipping-triangulator and ear-clipping-triangulator! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/ear-clipping-triangulator))))
+    (is (:macro (meta (resolve 'play-clj.math/ear-clipping-triangulator!))))))
+
+(deftest float-counter-macro-tests
+  (testing "float-counter and float-counter! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/float-counter))))
+    (is (:macro (meta (resolve 'play-clj.math/float-counter!))))))
+
+(deftest windowed-mean-macro-tests
+  (testing "windowed-mean and windowed-mean! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/windowed-mean))))
+    (is (:macro (meta (resolve 'play-clj.math/windowed-mean!))))))
+
+(deftest bezier-macro-tests
+  (testing "bezier and bezier! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/bezier))))
+    (is (:macro (meta (resolve 'play-clj.math/bezier!))))))
+
+(deftest b-spline-macro-tests
+  (testing "b-spline and b-spline! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/b-spline))))
+    (is (:macro (meta (resolve 'play-clj.math/b-spline!))))))
+
+(deftest catmull-rom-spline-macro-tests
+  (testing "catmull-rom-spline and catmull-rom-spline! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/catmull-rom-spline))))
+    (is (:macro (meta (resolve 'play-clj.math/catmull-rom-spline!))))))
+
+(deftest frustum-macro-tests
+  (testing "frustum and frustum! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/frustum))))
+    (is (:macro (meta (resolve 'play-clj.math/frustum!))))))
+
+(deftest plane-macro-tests
+  (testing "plane and plane! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/plane))))
+    (is (:macro (meta (resolve 'play-clj.math/plane!))))))
+
+(deftest polygon-macro-tests
+  (testing "polygon and polygon! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/polygon))))
+    (is (:macro (meta (resolve 'play-clj.math/polygon!))))))
+
+(deftest polyline-macro-tests
+  (testing "polyline and polyline! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/polyline))))
+    (is (:macro (meta (resolve 'play-clj.math/polyline!))))))
+
+(deftest ray-macro-tests
+  (testing "ray and ray! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/ray))))
+    (is (:macro (meta (resolve 'play-clj.math/ray!))))))
+
+(deftest segment-macro-tests
+  (testing "segment and segment! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/segment))))
+    (is (:macro (meta (resolve 'play-clj.math/segment!))))))
+
+(deftest sphere-macro-tests
+  (testing "sphere and sphere! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/sphere))))
+    (is (:macro (meta (resolve 'play-clj.math/sphere!))))))
+
+(deftest bounding-box-macro-tests
+  (testing "bounding-box and bounding-box! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/bounding-box))))
+    (is (:macro (meta (resolve 'play-clj.math/bounding-box!))))))
+
+(deftest math-macro-existence-tests
+  (testing "math! and intersector! macros exist"
+    (is (:macro (meta (resolve 'play-clj.math/math!))))
+    (is (:macro (meta (resolve 'play-clj.math/intersector!))))))

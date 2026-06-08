@@ -70,3 +70,9 @@
           bundle (e/->BundleEntity inner)]
       (is (satisfies? e/Entity bundle))
       (is (= 2 (count (:entities bundle)))))))
+
+(deftest map-entity-tests
+  (testing "draw! on PersistentArrayMap returns nil"
+    (is (nil? (e/draw! {} {} nil))))
+  (testing "draw! on PersistentHashMap returns nil"
+    (is (nil? (e/draw! {:a 1} {} nil)))))
