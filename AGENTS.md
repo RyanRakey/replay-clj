@@ -13,7 +13,7 @@ The library is essentially a thin, idiomatic-Clojure wrapper around [libGDX](htt
 - **Java target**: 1.8 (was 1.6)
 - **Desktop backend**: LWJGL3 (was LWJGL2)
 - **Build tool**: Clojure CLI (`deps.edn`)
-- **Test suite**: 287 tests, all passing via headless libGDX backend
+- **Test suite**: 351 tests (329 headless + 22 GL), all passing
 
 ## Project Structure
 
@@ -40,12 +40,16 @@ play-clj/
 │       ├── physics.clj                  # Multimethod dispatch for 2D/3D physics
 │       └── repl.clj                     # REPL helper functions
 ├── src-java/
-│   └── play_clj/g3d_physics/
-│       └── ContactListener3D.java       # Java class used by Bullet contact listener
+│   └── play_clj/
+│       ├── g3d_physics/
+│       │   └── ContactListener3D.java   # Java class used by Bullet contact listener
+│       └── test/
+│           └── MockGL20.java            # Mock GL20 implementation for headless GL tests
 ├── classes/                             # Compiled Java output (ContactListener3D.class)
 └── test/
     └── play_clj/
-        ├── headless_fixture.clj         # HeadlessApplication test fixture
+        ├── headless_fixture.clj         # HeadlessApplication test fixture (no GL)
+        ├── gl_fixture.clj               # GL-aware fixture using MockGL20
         ├── core_test.clj                # Tests for colors, cameras, shapes, key/button codes
         ├── core_listeners_test.clj      # Tests for input/listener machinery
         ├── core_utils_test.clj          # Tests for timers, assets, preferences
@@ -53,6 +57,9 @@ play-clj/
         ├── g2d_test.clj                 # Tests for texture/sprite/animation entities
         ├── g3d_test.clj                 # Tests for 3D graphics (model, environment, material)
         ├── g3d_physics_test.clj         # Tests for Bullet physics wrappers
+        ├── gl_core_test.clj             # GL tests: stage*, shape*, clear!
+        ├── gl_entities_test.clj         # GL tests: entity draw! with real SpriteBatch
+        ├── gl_g2d_test.clj              # GL tests: Texture, Sprite, BitmapFont, NinePatch
         ├── math_test.clj                # Tests for vectors, matrices, geometry, math utils
         ├── physics_test.clj             # Tests for physics multimethod dispatch
         ├── physics_shapes_test.clj      # Tests for Box2D shape macros
@@ -74,6 +81,9 @@ clojure -T:build javac
 
 # Run all tests
 clojure -M:test run-tests.clj
+
+# Run GL-dependent tests (uses MockGL20 for headless GL context)
+clojure -M:test run-gl-tests.clj
 
 # Generate coverage report (HTML at target/coverage/index.html)
 clojure -M:test:coverage
@@ -127,10 +137,11 @@ clojure -T:build jar
 ## How to Add Tests
 
 1. Create a file in `test/play_clj/<name>_test.clj`
-2. Require `[play-clj.headless-fixture]` and call `(use-fixtures :once play-clj.headless-fixture/headless-setup)` if the test touches libGDX classes
-3. Tests that only exercise pure Clojure utilities (e.g. `utils_test.clj`) do **not** need the headless fixture
-4. Avoid creating `Texture` from scratch in headless mode; use `(TextureRegion.)` or pass existing objects
-5. Run with `clojure -M:test run-tests.clj`
+2. For tests that don't need GL: require `[play-clj.headless-fixture]` and call `(use-fixtures :once play-clj.headless-fixture/headless-setup)`
+3. For tests that need GL (SpriteBatch, ShapeRenderer, Stage, Texture, BitmapFont): require `[play-clj.gl-fixture]` and call `(use-fixtures :once play-clj.gl-fixture/gl-setup)`. This injects a `MockGL20` into `Gdx.gl`/`Gdx.gl20` that returns valid handles for shader/buffer/texture creation.
+4. When creating `TextureRegion` or `Sprite` in GL tests, use a real `Texture` from a `Pixmap` — `(TextureRegion.)` has a null texture and will crash on draw.
+5. Run headless tests with `clojure -M:test run-tests.clj`
+6. Run GL tests with `clojure -M:test run-gl-tests.clj`
 
 ## Known Issues / TODOs
 
