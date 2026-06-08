@@ -6,10 +6,20 @@ A Clojure library that provides a wrapper for [libGDX](http://libgdx.badlogicgam
 
 ## Getting Started
 
-There are a few ways to create a project:
+Add `play-clj` as a dependency in your `deps.edn`:
 
-* [Leiningen](https://github.com/technomancy/leiningen): `lein new play-clj hello-world`
-* [Nightmod](https://sekao.net/nightmod/): An IDE for play-clj
+```clojure
+{com.badlogicgames.gdx/gdx {:mvn/version "1.14.2"}
+ com.badlogicgames.gdx/gdx-backend-lwjgl3 {:mvn/version "1.14.2"}
+ com.badlogicgames.gdx/gdx-platform$natives-desktop {:mvn/version "1.14.2"}
+ play-clj {:mvn/version "1.2.0-SNAPSHOT"}}
+```
+
+Then start a REPL with:
+
+```bash
+clojure -M
+```
 
 ## Justification
 
