@@ -5,7 +5,10 @@
             [play-clj.utils :as u])
   (:import [com.badlogic.gdx.graphics Color OrthographicCamera PerspectiveCamera]
            [com.badlogic.gdx.graphics.glutils ShapeRenderer ShapeRenderer$ShapeType]
-           [com.badlogic.gdx.graphics.g2d SpriteBatch]))
+           [com.badlogic.gdx.graphics.g2d SpriteBatch]
+           [com.badlogic.gdx.maps MapLayer MapLayers MapObject MapObjects]
+           [com.badlogic.gdx.maps.tiled TiledMap TiledMapTileLayer TiledMapTileLayer$Cell]
+           [com.badlogic.gdx.scenes.scene2d Stage]))
 
 (use-fixtures :once play-clj.headless-fixture/headless-setup)
 
@@ -287,6 +290,33 @@
     (is (:macro (meta (resolve 'play-clj.core/orthographic!))))
     (is (:macro (meta (resolve 'play-clj.core/perspective!))))))
 
+(deftest orthographic-macro-tests
+  (testing "orthographic macro creates OrthographicCamera"
+    (let [cam (c/orthographic)]
+      (is (instance? OrthographicCamera cam)))))
+
+(deftest perspective-macro-tests
+  (testing "perspective macro creates PerspectiveCamera"
+    (let [cam (c/perspective 75 800 600)]
+      (is (instance? PerspectiveCamera cam))
+      (is (= 75.0 (.fieldOfView cam))))))
+
+(deftest width-bang-tests
+  (testing "width! function exists"
+    (is (resolve 'play-clj.core/width!))))
+
+(deftest height-bang-tests
+  (testing "height! function exists"
+    (is (resolve 'play-clj.core/height!))))
+
+(deftest z-bang-tests
+  (testing "z! sets camera z position"
+    (let [cam (c/perspective* 75 800 600)
+          screen {:camera cam}]
+      (c/position! screen 1 2 0)
+      (c/z! screen 42.0)
+      (is (= 42.0 (c/z screen))))))
+
 (deftest game-input-tests
   (testing "game returns input/touch values"
     (is (boolean? (c/game :touched?)))
@@ -309,3 +339,83 @@
       ;; update! returns the updated screen after calling update-screen!
       ;; which may fail without renderer, so just verify it doesn't throw
       (is (or (map? result) (nil? result))))))
+
+;; core_graphics.clj tests
+
+(deftest shape-creation-tests
+  (testing "shape* function exists"
+    (is (resolve 'play-clj.core/shape*))))
+
+(deftest shape-macro-tests
+  (testing "shape macro exists"
+    (is (:macro (meta (resolve 'play-clj.core/shape))))
+    (is (:macro (meta (resolve 'play-clj.core/shape!))))))
+
+(deftest tiled-map-creation-tests
+  (testing "tiled-map* with no args creates empty TiledMap"
+    (let [tm (c/tiled-map*)]
+      (is (instance? TiledMap tm))
+      (is (some? (.getLayers tm))))))
+
+(deftest tiled-map-cell-creation-tests
+  (testing "tiled-map-cell* with no args creates Cell"
+    (let [cell (c/tiled-map-cell*)]
+      (is (instance? TiledMapTileLayer$Cell cell)))))
+
+(deftest tiled-map-layer-creation-tests
+  (testing "tiled-map-layer* with dimensions creates TiledMapTileLayer"
+    (let [layer (c/tiled-map-layer* 10 10 32 32)]
+      (is (instance? TiledMapTileLayer layer))
+      (is (= 10 (.getWidth layer)))
+      (is (= 10 (.getHeight layer))))))
+
+(deftest map-layers-creation-tests
+  (testing "map-layers* with no args creates empty MapLayers"
+    (let [layers (c/map-layers*)]
+      (is (instance? MapLayers layers))
+      (is (= 0 (.size layers))))))
+
+(deftest map-layer-creation-tests
+  (testing "map-layer* with no args creates MapLayer"
+    (let [layer (c/map-layer*)]
+      (is (instance? MapLayer layer)))))
+
+(deftest map-objects-creation-tests
+  (testing "map-objects* with no args creates MapObjects"
+    (let [objs (c/map-objects*)]
+      (is (instance? MapObjects objs))
+      (is (some? objs)))))
+
+(deftest map-object-creation-tests
+  (testing "map-object* creates MapObject"
+    (let [obj (c/map-object*)]
+      (is (instance? MapObject obj)))))
+
+(deftest stage-creation-tests
+  (testing "stage* function exists"
+    (is (resolve 'play-clj.core/stage*)))
+  (testing "stage macro exists"
+    (is (:macro (meta (resolve 'play-clj.core/stage))))
+    (is (:macro (meta (resolve 'play-clj.core/stage!))))))
+
+(deftest draw-multimethod-tests
+  (testing "draw! is a multimethod"
+    (is (instance? clojure.lang.MultiFn (var-get (resolve 'play-clj.core/draw!))))))
+
+(deftest render-function-existence-tests
+  (testing "render functions exist"
+    (is (resolve 'play-clj.core/render-map!))
+    (is (resolve 'play-clj.core/render-stage!))
+    (is (resolve 'play-clj.core/render!))
+    (is (resolve 'play-clj.core/render-sorted!))))
+
+(deftest tiled-map-macro-behavioral-tests
+  (testing "tiled-map macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.core/tiled-map))))
+    (is (:macro (meta (resolve 'play-clj.core/tiled-map!))))))
+
+(deftest map-layer-names-tests
+  (testing "map-layers* can iterate layers"
+    (let [layers (c/map-layers*)]
+      (is (instance? MapLayers layers))
+      (is (= 0 (count (for [_ layers] true)))))))

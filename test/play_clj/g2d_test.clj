@@ -137,4 +137,20 @@
 
 (deftest animation->texture-tests
   (testing "animation->texture function exists"
-    (is (resolve 'play-clj.g2d/animation->texture))))
+    (is (resolve 'play-clj.g2d/animation->texture)))
+
+  (testing "animation->texture returns TextureRegion from animation and screen"
+    (let [region1 (TextureRegion.)
+          region2 (TextureRegion.)
+          anim (g2d/animation* 0.2 [region1 region2])
+          screen {:total-time 0.05}
+          result (g2d/animation->texture screen anim)]
+      (is (g2d/texture? result)))))
+
+(deftest nine-patch-star-tests
+  (testing "nine-patch* function exists"
+    (is (resolve 'play-clj.g2d/nine-patch*))))
+
+(deftest animation-macro-existence-tests
+  (testing "animation macro exists"
+    (is (:macro (meta (resolve 'play-clj.g2d/animation))))))

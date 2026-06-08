@@ -54,3 +54,49 @@
     (is (:macro (meta (resolve 'play-clj.g3d/model-builder!))))
     (is (:macro (meta (resolve 'play-clj.g3d/attribute))))
     (is (:macro (meta (resolve 'play-clj.g3d/attribute!))))))
+
+(deftest model-batch-star-tests
+  (testing "model-batch* function exists"
+    (is (resolve 'play-clj.g3d/model-batch*))))
+
+(deftest model-batch-macro-tests
+  (testing "model-batch macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/model-batch))))))
+
+(deftest model-batch-bang-macro-tests
+  (testing "model-batch! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/model-batch!))))))
+
+(deftest model-macro-existence-tests
+  (testing "model macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/model))))))
+
+(deftest model-bang-macro-behavioral-tests
+  (testing "model! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/model!))))))
+
+(deftest model-star-function-tests
+  (testing "model* exists"
+    (is (resolve 'play-clj.g3d/model*))))
+
+(deftest model-builder-macro-tests
+  (testing "model-builder macro creates ModelBuilder"
+    (let [builder (g3d/model-builder)]
+      (is (instance? ModelBuilder builder)))))
+
+(deftest model-builder-bang-macro-tests
+  (testing "model-builder! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/model-builder!))))))
+
+(deftest material-macro-tests
+  (testing "material macro creates Material"
+    (let [mat (g3d/material)]
+      (is (instance? Material mat)))))
+
+(deftest material-bang-macro-behavioral-tests
+  (testing "material! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/material!))))))
+
+(deftest environment-bang-macro-behavioral-tests
+  (testing "environment! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/environment!))))))

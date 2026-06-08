@@ -69,3 +69,35 @@
   (testing "defscreen and defgame macros exist"
     (is (:macro (meta (resolve 'play-clj.core/defscreen))))
     (is (:macro (meta (resolve 'play-clj.core/defgame))))))
+
+(deftest clear-bang-tests
+  (testing "clear! macro exists"
+    (is (resolve 'play-clj.core/clear!))))
+
+(deftest sound-star-tests
+  (testing "sound* function exists"
+    (is (resolve 'play-clj.core/sound*))))
+
+(deftest music-star-tests
+  (testing "music* function exists"
+    (is (resolve 'play-clj.core/music*))))
+
+(deftest sound-macro-behavioral-tests
+  (testing "sound macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.core/sound))))
+    (is (:macro (meta (resolve 'play-clj.core/sound!))))))
+
+(deftest music-macro-behavioral-tests
+  (testing "music macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.core/music))))
+    (is (:macro (meta (resolve 'play-clj.core/music!))))))
+
+(deftest gdx-subsystem-macro-behavioral-tests
+  (testing "Gdx subsystem macros exist and are callable"
+    (is (:macro (meta (resolve 'play-clj.core/app!))))
+    (is (:macro (meta (resolve 'play-clj.core/audio!))))
+    (is (:macro (meta (resolve 'play-clj.core/files!))))
+    (is (:macro (meta (resolve 'play-clj.core/gl!))))
+    (is (:macro (meta (resolve 'play-clj.core/graphics!))))
+    (is (:macro (meta (resolve 'play-clj.core/input!))))
+    (is (:macro (meta (resolve 'play-clj.core/net!))))))

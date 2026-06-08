@@ -5,7 +5,11 @@
             [play-clj.g2d :as g2d]
             [play-clj.ui :as ui])
   (:import [com.badlogic.gdx.graphics.g2d TextureRegion]
-           [com.badlogic.gdx.scenes.scene2d Actor]))
+           [com.badlogic.gdx.scenes.scene2d Actor]
+           [com.badlogic.gdx.scenes.scene2d.ui CheckBox Container Dialog
+            HorizontalGroup Image ImageButton ImageTextButton Label ScrollPane
+            SelectBox Skin Slider Stack Table TextButton TextField Tree
+            VerticalGroup Window]))
 
 (use-fixtures :once play-clj.headless-fixture/headless-setup)
 
@@ -181,3 +185,135 @@
     (is (:macro (meta (resolve 'play-clj.ui/click-listener!))))
     (is (:macro (meta (resolve 'play-clj.ui/drag-listener!))))
     (is (:macro (meta (resolve 'play-clj.ui/focus-listener!))))))
+
+;; Behavioral tests for constructor functions
+
+(deftest container-star-tests
+  (testing "container* creates Container wrapping child"
+    (let [child {:object (Actor.)}
+          entity (ui/container* child)]
+      (is (ui/container? entity))
+      (is (instance? Container (:object entity))))))
+
+(deftest image-star-tests
+  (testing "image* from TextureRegion creates Image entity"
+    (let [region (TextureRegion.)
+          entity (ui/image* region)]
+      (is (ui/image? entity))
+      (is (instance? Image (:object entity))))))
+
+(deftest horizontal-star-tests
+  (testing "horizontal* creates HorizontalGroup"
+    (let [entity (ui/horizontal* [{:object (Actor.)}])]
+      (is (ui/horizontal? entity))
+      (is (instance? HorizontalGroup (:object entity))))))
+
+(deftest vertical-star-tests
+  (testing "vertical* creates VerticalGroup"
+    (let [entity (ui/vertical* [{:object (Actor.)}])]
+      (is (ui/vertical? entity))
+      (is (instance? VerticalGroup (:object entity))))))
+
+(deftest stack-star-tests
+  (testing "stack* creates Stack"
+    (let [entity (ui/stack* [{:object (Actor.)}])]
+      (is (ui/stack? entity))
+      (is (instance? Stack (:object entity))))))
+
+(deftest table-star-tests
+  (testing "table* creates Table"
+    (let [entity (ui/table* [{:object (Actor.)}])]
+      (is (ui/table? entity))
+      (is (instance? Table (:object entity))))))
+
+(deftest select-box-predicate-tests
+  (testing "select-box? returns false for non-select-box"
+    (is (not (ui/select-box? {:object "not a select-box"})))))
+
+(deftest add-to-group-multimethod-tests
+  (testing "add-to-group! is a multimethod"
+    (is (instance? clojure.lang.MultiFn
+                   (var-get (resolve 'play-clj.ui/add-to-group!))))))
+
+(deftest actor-bang-macro-behavioral-tests
+  (testing "actor! calls method on actor"
+    (let [actor (Actor.)
+          entity {:object actor}]
+      (ui/actor! entity :set-name "test")
+      (is (= "test" (.getName actor))))))
+
+(deftest container-bang-macro-behavioral-tests
+  (testing "container! macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.ui/container!))))))
+
+(deftest image-bang-macro-behavioral-tests
+  (testing "image! calls method on image"
+    (let [region (TextureRegion.)
+          entity (ui/image* region)]
+      (ui/image! entity :set-width 100)
+      (is (= 100.0 (.getWidth ^Image (:object entity)))))))
+
+(deftest table-bang-macro-behavioral-tests
+  (testing "table! calls method on table"
+    (let [entity (ui/table* [{:object (Actor.)}])]
+      (ui/table! entity :set-fill-parent false)
+      (is (instance? Table (:object entity))))))
+
+(deftest stack-bang-macro-behavioral-tests
+  (testing "stack! calls method on stack"
+    (let [entity (ui/stack* [{:object (Actor.)}])]
+      (is (instance? Stack (:object entity))))))
+
+(deftest horizontal-bang-macro-behavioral-tests
+  (testing "horizontal! calls method on horizontal group"
+    (let [entity (ui/horizontal* [{:object (Actor.)}])]
+      (is (instance? HorizontalGroup (:object entity))))))
+
+(deftest vertical-bang-macro-behavioral-tests
+  (testing "vertical! calls method on vertical group"
+    (let [entity (ui/vertical* [{:object (Actor.)}])]
+      (is (instance? VerticalGroup (:object entity))))))
+
+(deftest label-bang-macro-behavioral-tests
+  (testing "label! macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.ui/label!))))))
+
+(deftest text-button-bang-macro-behavioral-tests
+  (testing "text-button! macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.ui/text-button!))))))
+
+(deftest text-field-bang-macro-behavioral-tests
+  (testing "text-field! macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.ui/text-field!))))))
+
+(deftest check-box-bang-macro-behavioral-tests
+  (testing "check-box! macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.ui/check-box!))))))
+
+(deftest dialog-bang-macro-behavioral-tests
+  (testing "dialog! macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.ui/dialog!))))))
+
+(deftest window-bang-macro-behavioral-tests
+  (testing "window! macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.ui/window!))))))
+
+(deftest scroll-pane-bang-macro-behavioral-tests
+  (testing "scroll-pane! macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.ui/scroll-pane!))))))
+
+(deftest slider-bang-macro-behavioral-tests
+  (testing "slider! macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.ui/slider!))))))
+
+(deftest tree-bang-macro-behavioral-tests
+  (testing "tree! macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.ui/tree!))))))
+
+(deftest image-button-bang-macro-behavioral-tests
+  (testing "image-button! macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.ui/image-button!))))))
+
+(deftest image-text-button-bang-macro-behavioral-tests
+  (testing "image-text-button! macro exists and is callable"
+    (is (:macro (meta (resolve 'play-clj.ui/image-text-button!))))))

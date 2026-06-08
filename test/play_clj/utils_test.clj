@@ -101,3 +101,32 @@
     ;; Use string keys so :put's args aren't parsed as method keywords
     (let [m (u/gdx-array-map {"a" 1} :put "b" 2)]
       (is (= 2 (.size m))))))
+
+(deftest key->method-tests
+  (testing "key->method returns symbol with dot prefix"
+    (is (= '.toUpperCase (u/key->method :to-upper-case)))
+    (is (= '.getIndex (u/key->method :get-index)))
+    (is (= '.setName (u/key->method :set-name)))))
+
+(deftest calls-macro-tests
+  (testing "calls! chains multiple method calls on object"
+    (let [sb (StringBuilder.)]
+      (u/calls! sb :append "hello" :append " " :append "world")
+      (is (= "hello world" (.toString sb))))))
+
+(deftest gdx-array-bang-macro-tests
+  (testing "gdx-array! calls method on array"
+    (let [arr (u/gdx-array* [1 2 3])]
+      (is (= 1 (u/gdx-array! arr :get 0)))
+      (is (= 3 (u/gdx-array! arr :size))))))
+
+(deftest gdx-array-map-bang-macro-tests
+  (testing "gdx-array-map! calls method on array-map"
+    (let [m (u/gdx-array-map* {:a 1 :b 2})]
+      (is (= 1 (u/gdx-array-map! m :get :a)))
+      (is (= 2 (u/gdx-array-map! m :size))))))
+
+(deftest create-method-calls-tests
+  (testing "create-method-calls builds method call forms"
+    (let [calls (u/create-method-calls [] [:add "hello" :add "world"])]
+      (is (= 2 (count calls))))))
