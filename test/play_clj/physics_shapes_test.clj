@@ -1,7 +1,8 @@
 (ns play-clj.physics-shapes-test
   (:require [clojure.test :refer :all]
             [play-clj.headless-fixture]
-            [play-clj.g2d-physics :as p]))
+            [play-clj.g2d-physics :as p])
+  (:import [com.badlogic.gdx.physics.box2d FixtureDef]))
 
 (use-fixtures :once play-clj.headless-fixture/headless-setup)
 
@@ -28,9 +29,17 @@
 (deftest fixture-def-tests
   (testing "fixture-def macro creates FixtureDef"
     (let [fd (p/fixture-def :density 1 :friction 0.5)]
-      (is (instance? com.badlogic.gdx.physics.box2d.FixtureDef fd))
-      (is (= 1.0 (.density fd)))
-      (is (= 0.5 (.friction fd))))))
+      (is (instance? FixtureDef fd))
+      (is (== 1.0 (.density fd)))
+      (is (== 0.5 (.friction fd))))))
+
+(deftest fixture-def-with-more-options-tests
+  (testing "fixture-def with restitution"
+    (let [fd (p/fixture-def :density 2.0 :friction 0.3 :restitution 0.8)]
+      (is (instance? FixtureDef fd))
+      (is (== (float 2.0) (.density fd)))
+      (is (== (float 0.3) (.friction fd)))
+      (is (== (float 0.8) (.restitution fd))))))
 
 (deftest body-def-tests
   (testing "body-def macro exists"
@@ -56,3 +65,39 @@
 (deftest fixture-macro-tests
   (testing "fixture! macro exists"
     (is (:macro (meta (resolve 'play-clj.g2d-physics/fixture!))))))
+
+(deftest add-body-function-tests
+  (testing "add-body! function exists"
+    (is (resolve 'play-clj.g2d-physics/add-body!))))
+
+(deftest add-joint-function-tests
+  (testing "add-joint! function exists"
+    (is (resolve 'play-clj.g2d-physics/add-joint!))))
+
+(deftest first-entity-function-tests
+  (testing "first-entity function exists"
+    (is (resolve 'play-clj.g2d-physics/first-entity))))
+
+(deftest second-entity-function-tests
+  (testing "second-entity function exists"
+    (is (resolve 'play-clj.g2d-physics/second-entity))))
+
+(deftest step-function-tests
+  (testing "step! function exists"
+    (is (resolve 'play-clj.g2d-physics/step!))))
+
+(deftest body-position-function-tests
+  (testing "body-position! function exists"
+    (is (resolve 'play-clj.g2d-physics/body-position!))))
+
+(deftest body-x-function-tests
+  (testing "body-x! function exists"
+    (is (resolve 'play-clj.g2d-physics/body-x!))))
+
+(deftest body-y-function-tests
+  (testing "body-y! function exists"
+    (is (resolve 'play-clj.g2d-physics/body-y!))))
+
+(deftest body-angle-function-tests
+  (testing "body-angle! function exists"
+    (is (resolve 'play-clj.g2d-physics/body-angle!))))

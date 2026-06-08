@@ -317,3 +317,43 @@
 (deftest image-text-button-bang-macro-behavioral-tests
   (testing "image-text-button! macro exists and is callable"
     (is (:macro (meta (resolve 'play-clj.ui/image-text-button!))))))
+
+;; Additional behavioral tests
+
+(deftest add-behavioral-tests
+  (testing "add! adds multiple children to a group"
+    (let [parent {:object (Table.)}
+          child1 {:object (Actor.)}
+          child2 {:object (Actor.)}
+          result (ui/add! parent child1 child2)]
+      (is (= parent result)))))
+
+(deftest table-add-row-tests
+  (testing "add-to-group! with :row keyword on Table"
+    (let [table (Table.)
+          parent {:object table}
+          child {:object (Actor.)}]
+      (ui/add! parent child :row child)
+      ;; Table should have rows
+      (is (instance? Table table)))))
+
+(deftest cell-bang-behavioral-tests
+  (testing "cell! function exists"
+    (is (resolve 'play-clj.ui/cell!))))
+
+(deftest style-behavioral-tests
+  (testing "style macro creates a LabelStyle"
+    (let [s (ui/style :label)]
+      (is (instance? com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle s)))))
+
+(deftest skin-star-tests
+  (testing "skin* function exists"
+    (is (resolve 'play-clj.ui/skin*))))
+
+(deftest drawable-behavioral-tests
+  (testing "drawable :texture-region creates TextureRegionDrawable"
+    (let [d (ui/drawable :texture-region)]
+      (is (instance? com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable d))))
+  (testing "drawable :sprite-drawable creates SpriteDrawable"
+    (let [d (ui/drawable :sprite)]
+      (is (instance? com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable d)))))

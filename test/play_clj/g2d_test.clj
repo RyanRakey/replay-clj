@@ -154,3 +154,59 @@
 (deftest animation-macro-existence-tests
   (testing "animation macro exists"
     (is (:macro (meta (resolve 'play-clj.g2d/animation))))))
+
+;; Additional behavioral tests
+
+(deftest texture-entity-from-region-tests
+  (testing "texture* from TextureRegion creates texture entity"
+    (let [region (TextureRegion.)
+          entity (g2d/texture* region)]
+      (is (g2d/texture? entity))
+      (is (= region (:object entity))))))
+
+(deftest sprite-entity-from-sprite-tests
+  (testing "sprite* from Sprite preserves sprite"
+    (let [sprite (Sprite.)]
+      (.setBounds sprite 10 20 32 32)
+      (let [entity (g2d/sprite* sprite)]
+        (is (g2d/sprite? entity))
+        (is (= sprite (:object entity)))
+        (is (= 10.0 (.getX (:object entity))))))))
+
+(deftest animation-play-mode-behavioral-tests
+  (testing "play-mode returns correct enum values"
+    (is (= com.badlogic.gdx.graphics.g2d.Animation$PlayMode/NORMAL
+           (g2d/play-mode :normal)))
+    (is (= com.badlogic.gdx.graphics.g2d.Animation$PlayMode/LOOP
+           (g2d/play-mode :loop)))
+    (is (= com.badlogic.gdx.graphics.g2d.Animation$PlayMode/LOOP_PINGPONG
+           (g2d/play-mode :loop-pingpong)))
+    (is (= com.badlogic.gdx.graphics.g2d.Animation$PlayMode/LOOP_REVERSED
+           (g2d/play-mode :loop-reversed)))
+    (is (= com.badlogic.gdx.graphics.g2d.Animation$PlayMode/REVERSED
+           (g2d/play-mode :reversed)))))
+
+(deftest animation-get-key-frame-tests
+  (testing "animation getKeyFrame returns a TextureRegion"
+    (let [r1 (TextureRegion.)
+          r2 (TextureRegion.)
+          r3 (TextureRegion.)
+          anim (g2d/animation* 0.1 [r1 r2 r3])]
+      (is (instance? com.badlogic.gdx.graphics.g2d.Animation anim))
+      (is (instance? TextureRegion (.getKeyFrame anim 0.0 true)))
+      (is (= 3 (count (.getKeyFrames anim)))))))
+
+(deftest particle-effect-star-tests
+  (testing "particle-effect* creates entity with ParticleEffect"
+    (let [entity (g2d/particle-effect* nil)]
+      (is (g2d/particle-effect? entity))
+      (is (instance? ParticleEffect (:object entity))))))
+
+(deftest nine-patch-predicate-tests
+  (testing "nine-patch? returns false for non-nine-patch object"
+    (is (not (g2d/nine-patch? {:object "not a nine-patch"})))))
+
+(deftest texture-atlas-predicate-tests
+  (testing "texture-atlas function exists"
+    (is (resolve 'play-clj.g2d/texture-atlas*))
+    (is (:macro (meta (resolve 'play-clj.g2d/texture-atlas))))))

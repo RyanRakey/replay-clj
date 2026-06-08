@@ -100,3 +100,54 @@
 (deftest environment-bang-macro-behavioral-tests
   (testing "environment! macro exists"
     (is (:macro (meta (resolve 'play-clj.g3d/environment!))))))
+
+;; Additional behavioral tests
+
+(deftest environment-star-behavioral-tests
+  (testing "environment* returns empty Environment"
+    (let [env (g3d/environment*)]
+      (is (instance? Environment env)))))
+
+(deftest environment-macro-behavioral-tests
+  (testing "environment macro creates Environment"
+    (let [env (g3d/environment)]
+      (is (instance? Environment env)))))
+
+(deftest material-star-behavioral-tests
+  (testing "material* returns empty Material"
+    (let [mat (g3d/material*)]
+      (is (instance? Material mat)))))
+
+(deftest material-macro-behavioral-tests
+  (testing "material macro creates Material"
+    (let [mat (g3d/material)]
+      (is (instance? Material mat)))))
+
+(deftest model-builder-star-behavioral-tests
+  (testing "model-builder* returns ModelBuilder"
+    (let [builder (g3d/model-builder*)]
+      (is (instance? ModelBuilder builder)))))
+
+(deftest model-builder-macro-behavioral-tests
+  (testing "model-builder macro creates ModelBuilder"
+    (let [builder (g3d/model-builder)]
+      (is (instance? ModelBuilder builder)))))
+
+(deftest attribute-type-behavioral-tests
+  (testing "attribute-type returns numeric values for known types"
+    (is (number? (g3d/attribute-type :color :diffuse)))
+    (is (number? (g3d/attribute-type :color :specular)))
+    (is (number? (g3d/attribute-type :float :shininess)))))
+
+(deftest model-predicate-behavioral-tests
+  (testing "model? returns false for non-model string"
+    (is (not (g3d/model? {:object "not a model"})))))
+
+(deftest g3d-function-existence-tests
+  (testing "all g3d functions exist"
+    (is (resolve 'play-clj.g3d/animation-controller*))
+    (is (resolve 'play-clj.g3d/model*))
+    (is (resolve 'play-clj.g3d/model-batch*))
+    (is (resolve 'play-clj.g3d/model-builder*))
+    (is (resolve 'play-clj.g3d/material*))
+    (is (resolve 'play-clj.g3d/environment*))))

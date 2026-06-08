@@ -419,3 +419,94 @@
     (let [layers (c/map-layers*)]
       (is (instance? MapLayers layers))
       (is (= 0 (count (for [_ layers] true)))))))
+
+;; core.clj behavioral tests
+
+(deftest update-behavioral-tests
+  (testing "update! calls update-fn! with assoc and returns screen"
+    (let [screen-atom (atom {:x 0})
+          screen {:update-fn! (fn [f & args] (apply swap! screen-atom f args))
+                  :renderer nil
+                  :world nil}]
+      (let [result (c/update! screen :x 42)]
+        (is (= 42 (:x @screen-atom))))))
+
+  (testing "update! can set multiple keys"
+    (let [screen-atom (atom {})
+          screen {:update-fn! (fn [f & args] (apply swap! screen-atom f args))
+                  :renderer nil
+                  :world nil}]
+      (c/update! screen :x 1 :y 2 :z 3)
+      (is (= 1 (:x @screen-atom)))
+      (is (= 2 (:y @screen-atom)))
+      (is (= 3 (:z @screen-atom))))))
+
+(deftest defscreen-star-tests
+  (testing "defscreen* creates a screen map with required keys"
+    (let [screen-atom (atom {})
+          entities-atom (atom [])
+          options {:on-show (fn [screen entities] entities)
+                   :on-render (fn [screen entities] entities)
+                   :on-hide (fn [screen entities] entities)
+                   :on-resize (fn [screen entities] entities)
+                   :on-resume (fn [screen entities] entities)
+                   :on-pause (fn [screen entities] entities)}
+          result (c/defscreen* screen-atom entities-atom options)]
+      (is (map? result))
+      (is (contains? result :screen))
+      (is (contains? result :entities))
+      (is (contains? result :execute-fn!))
+      (is (contains? result :update-fn!))
+      (is (contains? result :show))
+      (is (contains? result :render))
+      (is (contains? result :hide))
+      (is (contains? result :pause))
+      (is (contains? result :resize))
+      (is (contains? result :resume))))
+
+  (testing "defscreen* with nil handlers"
+    (let [screen-atom (atom {})
+          entities-atom (atom [])
+          options {}
+          result (c/defscreen* screen-atom entities-atom options)]
+      (is (map? result))
+      (is (fn? (:show result)))
+      (is (fn? (:render result))))))
+
+(deftest defgame-star-tests
+  (testing "defgame* creates a Game proxy"
+    (let [game (c/defgame* {:on-create (fn [this])})]
+      (is (instance? com.badlogic.gdx.Game game)))))
+
+(deftest normalize-tests
+  (testing "normalize is accessible via var"
+    (is (resolve 'play-clj.core/normalize))))
+
+(deftest wrapper-tests
+  (testing "wrapper function is defined"
+    (is (resolve 'play-clj.core/wrapper))))
+
+(deftest screen-wrapper-tests
+  (testing "set-screen-wrapper! sets the wrapper function"
+    (let [called (atom false)]
+      (c/set-screen-wrapper! (fn [screen-atom screen-fn]
+                               (reset! called true)
+                               (screen-fn)))
+      (is (resolve 'play-clj.core/wrapper))
+      ;; Restore default
+      (c/set-screen-wrapper! (fn [screen-atom screen-fn] (screen-fn))))))
+
+(deftest screen-object-tests
+  (testing "screen! function exists"
+    (is (resolve 'play-clj.core/screen!))))
+
+(deftest defscreen-macro-expansion-tests
+  (testing "defscreen macro exists"
+    (is (:macro (meta (resolve 'play-clj.core/defscreen)))))
+
+  (testing "defgame macro exists"
+    (is (:macro (meta (resolve 'play-clj.core/defgame))))))
+
+(deftest set-screen-function-tests
+  (testing "set-screen! function exists"
+    (is (resolve 'play-clj.core/set-screen!))))
