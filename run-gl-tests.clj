@@ -7,6 +7,7 @@
 (require 'play-clj.gl-g2d-extended-test)
 (require 'play-clj.gl-g3d-test)
 (require 'play-clj.gl-ui-test)
+(require 'play-clj.gl-advanced-test)
 
 (let [results (t/run-all-tests #"play-clj\.gl-.*-test")]
   (println "\n=== GL Test Summary ===")

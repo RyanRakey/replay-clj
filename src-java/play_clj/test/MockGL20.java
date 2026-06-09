@@ -171,7 +171,15 @@ public class MockGL20 implements GL20 {
     @Override public void glPolygonOffset(float factor, float units) {}
     @Override public void glSampleCoverage(float value, boolean invert) {}
     @Override public void glReadPixels(int x, int y, int w, int h, int fmt, int type, Buffer px) {}
-    @Override public void glGetIntegerv(int pname, IntBuffer params) {}
+    @Override public void glGetIntegerv(int pname, IntBuffer params) {
+        // Return valid values for common queries
+        // GL_MAX_TEXTURE_IMAGE_UNITS = 0x8872, GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS = 0x8B4D
+        if (pname == 0x8872 || pname == 0x8B4D) {
+            params.put(0, 16); // 16 texture units
+        } else {
+            params.put(0, 0);
+        }
+    }
     @Override public void glGetFloatv(int pname, FloatBuffer params) {}
     @Override public void glGetBooleanv(int pname, Buffer params) {}
     @Override public void glGetBufferParameteriv(int target, int pname, IntBuffer params) {}
