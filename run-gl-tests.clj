@@ -2,7 +2,11 @@
 (require 'play-clj.gl-fixture)
 (require 'play-clj.gl-entities-test)
 (require 'play-clj.gl-core-test)
+(require 'play-clj.gl-core-lifecycle-test)
 (require 'play-clj.gl-g2d-test)
+(require 'play-clj.gl-g2d-extended-test)
+(require 'play-clj.gl-g3d-test)
+(require 'play-clj.gl-ui-test)
 
 (let [results (t/run-all-tests #"play-clj\.gl-.*-test")]
   (println "\n=== GL Test Summary ===")
