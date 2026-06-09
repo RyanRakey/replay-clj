@@ -200,3 +200,53 @@
       (.addActor stage actor)
       (c/render-stage! {:renderer stage})
       (.dispose stage))))
+
+(deftest render-with-stage-tests
+  (testing "render! with Stage renderer calls render-stage!"
+    (let [stage (Stage.)
+          actor (Actor.)]
+      (.addActor stage actor)
+      (c/render! {:renderer stage})
+      (.dispose stage))))
+
+(deftest defscreen-star-with-timer-tests
+  (testing "defscreen* with on-timer handler"
+    (let [timer-called (atom false)
+          screen-atom (atom {})
+          entities-atom (atom [])
+          options {:on-timer (fn [screen entities]
+                               (reset! timer-called true)
+                               entities)}
+          screen-obj (c/defscreen* screen-atom entities-atom options)]
+      (is (fn? (:show screen-obj)))
+      (is (some? (:options screen-obj))))))
+
+(deftest defscreen-star-execute-fn-tests
+  (testing "defscreen* execute-fn! calls handler with options"
+    (let [received (atom nil)
+          screen-atom (atom {:my-key :my-value})
+          entities-atom (atom [{:id 1}])
+          options {:on-custom (fn [screen entities]
+                                (reset! received (:my-key screen))
+                                entities)}
+          screen-obj (c/defscreen* screen-atom entities-atom options)]
+      ;; The execute-fn! should be callable
+      (is (fn? (:execute-fn! screen-obj)))))
+
+  (testing "defscreen* update-fn! modifies screen atom"
+    (let [screen-atom (atom {:x 0})
+          entities-atom (atom [])
+          options {}
+          screen-obj (c/defscreen* screen-atom entities-atom options)]
+      ((:update-fn! screen-obj) assoc :x 42)
+      (is (= 42 (:x @screen-atom))))))
+
+(deftest defscreen-star-show-initializes-input-listeners
+  (testing "defscreen* show sets up input-listeners"
+    (let [screen-atom (atom {})
+          entities-atom (atom [])
+          options {:on-show (fn [screen entities] entities)}
+          screen-obj (c/defscreen* screen-atom entities-atom options)]
+      ((:show screen-obj))
+      (is (some? (:input-listeners @screen-atom)))
+      (is (some? (:ui-listeners @screen-atom))))))

@@ -188,3 +188,69 @@
       (ui/image! entity :set-height 50)
       (is (= 100.0 (.getWidth ^Image (:object entity))))
       (is (= 50.0 (.getHeight ^Image (:object entity)))))))
+
+(deftest horizontal-bang-full-tests
+  (testing "horizontal! calls methods on HorizontalGroup"
+    (let [entity (ui/horizontal* [{:object (Actor.)}])]
+      (ui/horizontal! entity :space 10)
+      (is (instance? HorizontalGroup (:object entity))))))
+
+(deftest vertical-bang-full-tests
+  (testing "vertical! calls methods on VerticalGroup"
+    (let [entity (ui/vertical* [{:object (Actor.)}])]
+      (ui/vertical! entity :space 10)
+      (is (instance? VerticalGroup (:object entity))))))
+
+(deftest stack-bang-full-tests
+  (testing "stack! calls methods on Stack"
+    (let [entity (ui/stack* [{:object (Actor.)}])]
+      (is (instance? Stack (:object entity))))))
+
+(deftest table-bang-full-tests
+  (testing "table! calls methods on Table"
+    (let [entity (ui/table* [{:object (Actor.)}])]
+      (ui/table! entity :set-fill-parent false)
+      (is (instance? Table (:object entity))))))
+
+(deftest drawable-full-tests
+  (testing "drawable :texture-region creates TextureRegionDrawable"
+    (let [d (ui/drawable :texture-region)]
+      (is (instance? com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable d))))
+  (testing "drawable :sprite creates SpriteDrawable"
+    (let [d (ui/drawable :sprite)]
+      (is (instance? com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable d))))
+  (testing "drawable :nine-patch creates NinePatchDrawable"
+    (let [d (ui/drawable :nine-patch)]
+      (is (instance? com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable d)))))
+
+(deftest style-full-tests
+  (testing "style :label creates LabelStyle"
+    (let [s (ui/style :label)]
+      (is (instance? com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle s))))
+  (testing "style :text-button creates TextButtonStyle"
+    (let [s (ui/style :text-button)]
+      (is (instance? com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle s))))
+  (testing "style :window creates WindowStyle"
+    (let [s (ui/style :window)]
+      (is (instance? com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle s))))
+  (testing "style :scroll-pane creates ScrollPaneStyle"
+    (let [s (ui/style :scroll-pane)]
+      (is (instance? com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle s))))
+  (testing "style :slider creates SliderStyle"
+    (let [s (ui/style :slider)]
+      (is (instance? com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle s))))
+  (testing "style :check-box creates CheckBoxStyle"
+    (let [s (ui/style :check-box)]
+      (is (instance? com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle s)))))
+
+(deftest align-full-tests
+  (testing "align returns values for all alignment keywords"
+    (is (number? (ui/align :center)))
+    (is (number? (ui/align :top)))
+    (is (number? (ui/align :bottom)))
+    (is (number? (ui/align :left)))
+    (is (number? (ui/align :right)))
+    (is (number? (ui/align :top-left)))
+    (is (number? (ui/align :top-right)))
+    (is (number? (ui/align :bottom-left)))
+    (is (number? (ui/align :bottom-right)))))

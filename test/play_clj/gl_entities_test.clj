@@ -89,6 +89,33 @@
       (.begin batch)
       (e/draw! entity {} batch)
       (.end batch)
+      (.dispose batch)))
+
+  (testing "SpriteEntity draw! with color as vector"
+    (let [batch (SpriteBatch.)
+          sprite (make-sprite)
+          entity (assoc (e/->SpriteEntity sprite) :color [1 0 0 1])]
+      (.begin batch)
+      (e/draw! entity {} batch)
+      (.end batch)
+      (.dispose batch)))
+
+  (testing "SpriteEntity draw! with alpha"
+    (let [batch (SpriteBatch.)
+          sprite (make-sprite)
+          entity (assoc (e/->SpriteEntity sprite) :alpha 0.5)]
+      (.begin batch)
+      (e/draw! entity {} batch)
+      (.end batch)
+      (.dispose batch)))
+
+  (testing "SpriteEntity draw! with Color object"
+    (let [batch (SpriteBatch.)
+          sprite (make-sprite)
+          entity (assoc (e/->SpriteEntity sprite) :color Color/RED)]
+      (.begin batch)
+      (e/draw! entity {} batch)
+      (.end batch)
       (.dispose batch))))
 
 (deftest nine-patch-creation-tests
@@ -103,6 +130,16 @@
           region (make-texture-region)
           np (NinePatch. region 2 2 2 2)
           entity (e/->NinePatchEntity np)]
+      (.begin batch)
+      (e/draw! entity {} batch)
+      (.end batch)
+      (.dispose batch)))
+
+  (testing "NinePatchEntity draw! with custom position and size"
+    (let [batch (SpriteBatch.)
+          region (make-texture-region)
+          np (NinePatch. region 2 2 2 2)
+          entity (assoc (e/->NinePatchEntity np) :x 10 :y 20 :width 100 :height 50)]
       (.begin batch)
       (e/draw! entity {} batch)
       (.end batch)
@@ -169,6 +206,28 @@
     (let [stage (Stage.)
           actor (Actor.)
           entity (e/->ActorEntity actor)]
+      (.addActor stage actor)
+      (let [batch (.getBatch stage)]
+        (.begin batch)
+        (e/draw! entity {:renderer stage} batch)
+        (.end batch))
+      (.dispose stage)))
+
+  (testing "ActorEntity draw! with position and scale"
+    (let [stage (Stage.)
+          actor (Actor.)
+          entity (assoc (e/->ActorEntity actor) :x 10 :y 20 :scale-x 2 :scale-y 2 :angle 45)]
+      (.addActor stage actor)
+      (let [batch (.getBatch stage)]
+        (.begin batch)
+        (e/draw! entity {:renderer stage} batch)
+        (.end batch))
+      (.dispose stage)))
+
+  (testing "ActorEntity draw! with width and height"
+    (let [stage (Stage.)
+          actor (Actor.)
+          entity (assoc (e/->ActorEntity actor) :width 100 :height 50)]
       (.addActor stage actor)
       (let [batch (.getBatch stage)]
         (.begin batch)
