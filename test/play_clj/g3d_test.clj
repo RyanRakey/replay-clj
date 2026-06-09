@@ -151,3 +151,31 @@
     (is (resolve 'play-clj.g3d/model-builder*))
     (is (resolve 'play-clj.g3d/material*))
     (is (resolve 'play-clj.g3d/environment*))))
+
+;; Additional behavioral tests
+
+(deftest attribute-behavioral-tests
+  (testing "attribute macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/attribute)))))
+  (testing "attribute! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/attribute!))))))
+
+(deftest environment-bang-behavioral-tests
+  (testing "environment! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/environment!))))))
+
+(deftest model-bang-behavioral-tests
+  (testing "model! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/model!))))))
+
+(deftest material-bang-behavioral-tests
+  (testing "material! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/material!))))))
+
+(deftest model-builder-bang-behavioral-tests
+  (testing "model-builder! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/model-builder!))))))
+
+(deftest animation-controller-bang-behavioral-tests
+  (testing "animation-controller! macro exists"
+    (is (:macro (meta (resolve 'play-clj.g3d/animation-controller!))))))

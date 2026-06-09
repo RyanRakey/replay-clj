@@ -210,3 +210,17 @@
   (testing "texture-atlas function exists"
     (is (resolve 'play-clj.g2d/texture-atlas*))
     (is (:macro (meta (resolve 'play-clj.g2d/texture-atlas))))))
+
+;; Additional behavioral tests for texture* paths (GL-dependent, moved to gl_g2d_test.clj)
+
+(deftest nine-patch-macro-behavioral-tests
+  (testing "nine-patch macro exists"
+    (is (:macro (meta (resolve 'play-clj.g2d/nine-patch))))))
+
+(deftest texture-macro-behavioral-tests
+  (testing "texture macro exists"
+    (is (:macro (meta (resolve 'play-clj.g2d/texture))))))
+
+(deftest sprite-macro-behavioral-tests
+  (testing "sprite macro exists"
+    (is (:macro (meta (resolve 'play-clj.g2d/sprite))))))

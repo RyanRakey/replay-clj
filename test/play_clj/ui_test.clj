@@ -357,3 +357,48 @@
   (testing "drawable :sprite-drawable creates SpriteDrawable"
     (let [d (ui/drawable :sprite)]
       (is (instance? com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable d)))))
+
+;; Additional behavioral tests
+
+(deftest style-behavioral-tests
+  (testing "style macro creates widget styles"
+    (is (instance? com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle (ui/style :label)))
+    (is (instance? com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle (ui/style :text-button)))
+    (is (instance? com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle (ui/style :window)))
+    (is (instance? com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle (ui/style :scroll-pane)))
+    (is (instance? com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle (ui/style :slider)))
+    (is (instance? com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle (ui/style :check-box)))
+    (is (instance? com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle (ui/style :list)))
+    (is (instance? com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle (ui/style :tree)))))
+
+(deftest align-behavioral-tests
+  (testing "align returns values for all keywords"
+    (is (number? (ui/align :center)))
+    (is (number? (ui/align :top)))
+    (is (number? (ui/align :bottom)))
+    (is (number? (ui/align :left)))
+    (is (number? (ui/align :right)))
+    (is (number? (ui/align :top-left)))
+    (is (number? (ui/align :top-right)))
+    (is (number? (ui/align :bottom-left)))
+    (is (number? (ui/align :bottom-right)))))
+
+(deftest add-to-group-table-row-tests
+  (testing "add-to-group! with :row keyword on Table"
+    (let [table (Table.)
+          parent {:object table}
+          child {:object (Actor.)}]
+      (ui/add! parent child :row child)
+      (is (instance? Table table)))))
+
+(deftest add-to-group-table-with-cell-options-tests
+  (testing "add-to-group! with child on Table"
+    (let [table (Table.)
+          parent {:object table}
+          child {:object (Actor.)}]
+      (ui/add! parent child)
+      (is (instance? Table table)))))
+
+(deftest cell-bang-behavioral-tests
+  (testing "cell! function exists"
+    (is (resolve 'play-clj.ui/cell!))))

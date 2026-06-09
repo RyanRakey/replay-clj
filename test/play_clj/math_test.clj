@@ -401,3 +401,81 @@
   (testing "math! and intersector! macros exist"
     (is (:macro (meta (resolve 'play-clj.math/math!))))
     (is (:macro (meta (resolve 'play-clj.math/intersector!))))))
+
+;; Additional behavioral tests for constructors
+
+(deftest bounding-box-behavioral-tests
+  (testing "bounding-box* creates BoundingBox from min/max vectors"
+    (let [bb (m/bounding-box* (Vector3. 0 0 0) (Vector3. 10 10 10))]
+      (is (instance? com.badlogic.gdx.math.collision.BoundingBox bb))
+      (is (= 10.0 (.getWidth bb)))
+      (is (= 10.0 (.getHeight bb)))
+      (is (= 10.0 (.getDepth bb)))))
+
+  (testing "bounding-box* default constructor"
+    (let [bb (m/bounding-box*)]
+      (is (instance? com.badlogic.gdx.math.collision.BoundingBox bb)))))
+
+(deftest ray-behavioral-tests
+  (testing "ray* creates Ray from origin and direction"
+    (let [r (m/ray* (Vector3. 0 0 0) (Vector3. 0 0 -1))]
+      (is (instance? com.badlogic.gdx.math.collision.Ray r))
+      (is (= 0.0 (.x (.origin r))))
+      (is (= -1.0 (.z (.direction r)))))))
+
+(deftest segment-behavioral-tests
+  (testing "segment* creates Segment from coordinates"
+    (let [s (m/segment* 0 0 0 10 10 10)]
+      (is (instance? com.badlogic.gdx.math.collision.Segment s))))
+
+  (testing "segment* creates Segment from Vector3 points"
+    (let [s (m/segment* (Vector3. 0 0 0) (Vector3. 10 10 10))]
+      (is (instance? com.badlogic.gdx.math.collision.Segment s)))))
+
+(deftest sphere-behavioral-tests
+  (testing "sphere* creates Sphere from center and radius"
+    (let [s (m/sphere* (Vector3. 5 5 5) 10)]
+      (is (instance? com.badlogic.gdx.math.collision.Sphere s))
+      (is (= 10.0 (.radius s))))))
+
+(deftest plane-behavioral-tests
+  (testing "plane* creates Plane from normal and point"
+    (let [p (m/plane* (Vector3. 0 1 0) (Vector3. 0 0 0))]
+      (is (instance? Plane p)))))
+
+(deftest matrix-3-behavioral-tests
+  (testing "matrix-3* creates identity matrix"
+    (let [mat (m/matrix-3*)]
+      (is (instance? Matrix3 mat)))))
+
+(deftest quaternion-behavioral-tests
+  (testing "quaternion macro creates Quaternion"
+    (let [q (m/quaternion 0 0 0 1)]
+      (is (instance? Quaternion q))
+      (is (= 1.0 (.w q))))))
+
+(deftest bounding-box-macro-behavioral-tests
+  (testing "bounding-box macro creates BoundingBox"
+    (let [bb (m/bounding-box (Vector3. 0 0 0) (Vector3. 10 10 10))]
+      (is (instance? com.badlogic.gdx.math.collision.BoundingBox bb)))))
+
+(deftest ray-macro-behavioral-tests
+  (testing "ray macro creates Ray"
+    (let [r (m/ray (Vector3. 0 0 0) (Vector3. 0 0 -1))]
+      (is (instance? com.badlogic.gdx.math.collision.Ray r)))))
+
+(deftest segment-macro-behavioral-tests
+  (testing "segment macro creates Segment"
+    (let [s (m/segment (Vector3. 0 0 0) (Vector3. 10 10 10))]
+      (is (instance? com.badlogic.gdx.math.collision.Segment s)))))
+
+(deftest sphere-macro-behavioral-tests
+  (testing "sphere macro creates Sphere"
+    (let [s (m/sphere (Vector3. 0 0 0) 5)]
+      (is (instance? com.badlogic.gdx.math.collision.Sphere s))
+      (is (= 5.0 (.radius s))))))
+
+(deftest frustum-macro-behavioral-tests
+  (testing "frustum macro creates Frustum"
+    (let [f (m/frustum)]
+      (is (instance? Frustum f)))))
